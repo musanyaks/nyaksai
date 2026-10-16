@@ -1,0 +1,28 @@
+generator client {
+  provider      = "prisma-client-js"
+  // "windows" makes `prisma generate` also fetch the Windows query engine so the
+  // packaged .exe (built on Linux/macOS) can run Prisma on Windows at runtime.
+  binaryTargets = ["native", "windows"]
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model ChatSession {
+  id        String   @id @default(cuid())
+  title     String
+  mode      String   @default("ask")
+  messages  String // JSON string: [{ role, text, images? }]
+  createdAt DateTime @default(now())
+}
+
+model Meeting {
+  id         String   @id @default(cuid())
+  title      String
+  language   String   @default("en-US")
+  transcript String // JSON string: [{ speaker, text, ts }]
+  answers    String // JSON string: [{ question, answer, ts }]
+  createdAt  DateTime @default(now())
+}

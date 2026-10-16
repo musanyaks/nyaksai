@@ -1,0 +1,58 @@
+{
+  "name": "nyaksai-desktop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Nyaksai — invisible desktop shell: capture-protected, absent from taskbar & Dock, always on top. Packagable into a self-contained .exe.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "prepare-server": "node prepare-server.js",
+    "dist": "node prepare-server.js && electron-builder --win",
+    "dist:dir": "node prepare-server.js && electron-builder --win --dir",
+    "dist:mac": "node prepare-server.js && electron-builder --mac",
+    "dist:linux": "node prepare-server.js && electron-builder --linux"
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^26.0.10"
+  },
+  "build": {
+    "appId": "app.nyaksai.desktop",
+    "productName": "Nyaksai",
+    "asar": true,
+    "afterPack": "hooks/afterPack.js",
+    "files": ["main.js", "preload.js", "package.json"],
+    "extraResources": [
+      { "from": "resources/next-server", "to": "next-server" },
+      { "from": "resources/nyaksai-template.db", "to": "nyaksai-template.db" }
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        { "target": "nsis" },
+        { "target": "portable" }
+      ],
+      "icon": "build/icon.png",
+      "signExecutable": false
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "artifactName": "Nyaksai-Setup-${version}.${ext}"
+    },
+    "portable": {
+      "artifactName": "Nyaksai-Portable-${version}.${ext}"
+    },
+    "mac": {
+      "target": "dmg",
+      "icon": "build/icon.png"
+    },
+    "linux": {
+      "target": "AppImage",
+      "icon": "build/icon.png",
+      "category": "Utility"
+    }
+  }
+}
